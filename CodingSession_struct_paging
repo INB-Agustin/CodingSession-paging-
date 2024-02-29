@@ -1,0 +1,120 @@
+#include <iostream>
+#include <string>
+#include <iomanip>
+using namespace std;
+
+
+
+void Space() {
+    cout << setw(20) << setfill(' ') << " ";
+}
+
+void DesignSpace() {
+    cout << setw(20) << setfill(' ') << " " << setw(20) << setfill('-') << " ";
+}
+
+void MenuSpace() {
+    cout << setw(27) << setfill(' ') << " ";
+}
+
+struct Student {
+    string firstName;
+    string lastName;
+    string year;
+    string course;
+    string section;
+};
+
+void PrintStudent(Student student) {
+    Space(); cout << "Student Information: \n";
+    Space(); cout << "First Name: " << student.firstName << endl;
+    Space(); cout << "Last Name: " << student.lastName << endl;
+    Space(); cout << "Year: " << student.year << endl;
+    Space(); cout << "Course: " << student.course << endl;
+    Space(); cout << "Section: " << student.section << endl;
+    DesignSpace(); cout << endl;
+}
+
+int MainMenu() {
+    int choice;
+    DesignSpace(); cout << endl;
+    MenuSpace(); cout << "MENU\n";
+    DesignSpace(); cout << endl;
+    Space(); cout << "1. Add Student\n";
+    Space(); cout << "2. View Students\n";
+    Space(); cout << "3. Exit\n";
+    DesignSpace(); cout << endl;
+    Space(); cout << "Enter your choice: ";
+    cin >> choice;
+    DesignSpace(); cout << endl;
+    return choice;
+}
+
+int main() {
+    const int MAX_STUDENTS = 100;
+    const int STUDENTS_PER_PAGE = 5;
+    Student students[MAX_STUDENTS];
+    int studentCount = 0;
+    int choice;
+    char tryAgain;
+    do {
+        choice = MainMenu();
+        cin.ignore();
+        switch (choice) {
+            case 1:
+                Space(); cout << "Enter First Name:";
+                getline(cin, students[studentCount].firstName);
+                Space(); cout << "Enter Last Name: ";
+                getline(cin, students[studentCount].lastName);
+                Space(); cout << "Enter Year: ";
+                getline(cin, students[studentCount].year);
+                Space(); cout << "Enter Course: ";
+                getline(cin, students[studentCount].course);
+                Space(); cout << "Enter Section: ";
+                getline(cin, students[studentCount].section);
+                studentCount++;
+                break;
+            case 2: {
+                Space(); cout << "View Students\n";
+                if (studentCount == 0) {
+                    cout << "No students to display." << endl;
+                } else {
+                    int totalPages = (studentCount + STUDENTS_PER_PAGE - 1) / STUDENTS_PER_PAGE;
+                    Space(); cout << "Total pages: " << totalPages << endl;
+                    int pageToShow;
+                    do {
+                        Space(); cout << "Enter page number to view (1-" << totalPages << "): ";
+                        cin >> pageToShow;
+                    } while (pageToShow < 1 || pageToShow > totalPages);
+
+                    system("cls");
+
+                    DesignSpace(); cout << endl;
+                    Space(); cout << "Page " << pageToShow << " of " << totalPages << ":" << endl;
+                    DesignSpace(); cout << endl;
+                    int startIdx = (pageToShow - 1) * STUDENTS_PER_PAGE;
+                    int endIdx = min(startIdx + STUDENTS_PER_PAGE, studentCount);
+                    for (int i = startIdx; i < endIdx; ++i) {
+                        PrintStudent(students[i]);
+                    }
+                    cout << endl;
+                }
+            }
+            break;
+            case 3:
+                Space(); cout << "Exiting program.\n";
+                break;
+            default:
+                Space(); cout << "Invalid Choice\n";
+                break;
+        }
+
+        Space(); cout << "Do you want to try again? (Y/N): ";
+        cin >> tryAgain;
+        if (tryAgain == 'Y' || tryAgain == 'y') {
+            system("cls");
+        }
+    } while (choice != 3 && (tryAgain == 'Y' || tryAgain == 'y'));
+
+    return 0;
+}
